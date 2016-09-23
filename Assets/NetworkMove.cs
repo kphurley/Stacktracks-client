@@ -10,11 +10,11 @@ public class NetworkMove : MonoBehaviour {
 	public string id;
 	public CarController cc;
 
-	//private Rigidbody rb;
+	private Rigidbody rb;
 
 	// Use this for initialization
 	void Start () {
-		//rb = GetComponent<Rigidbody> ();
+		rb = GetComponent<Rigidbody> ();
 		id = gameObject.name;
 		cc = GetComponent<CarController> ();
 	}
@@ -24,15 +24,16 @@ public class NetworkMove : MonoBehaviour {
 	}
 
 	void ApplyNetworkMove(string posValues){
+		//Debug.Log (posValues);
 		string[] values = posValues.Split (',');
 		cc.Move (float.Parse(values [1]), float.Parse(values [3]), 
 			float.Parse(values [5]), float.Parse(values [7]));
 
-		//applying the components in this way works but doesnt turn the car!
-//		transform.position = new Vector3 (float.Parse (values [1]),
-//			float.Parse (values [3]), float.Parse (values [5]));
-//		rb.velocity = new Vector3 (float.Parse (values [7]),
-//			float.Parse (values [9]), float.Parse (values [11]));
+		//attempt to enforce some level of syncronicity
+		transform.position = new Vector3 (float.Parse (values [9]),
+			float.Parse (values [11]), float.Parse (values [13]));
+		rb.velocity = new Vector3 (float.Parse (values [15]),
+			float.Parse (values [17]), float.Parse (values [19]));
 	}
 		
 

@@ -11,6 +11,8 @@ public class Network : MonoBehaviour {
 
 	public GameObject networkCar;
 
+	private int NUM_OF_KEYS_AND_VALUES = 21;
+
 	//The set of player game objects obtained via network
 	Dictionary<string, GameObject> players;
 
@@ -56,12 +58,12 @@ public class Network : MonoBehaviour {
 	void OnTick(SocketIOEvent e) {
 		
 		List<string> values = GetKeys(e.data.ToString());
-		string db = "";
-		for (int i = 0; i < values.Count; i++) {
-			db += values [i] + "|";
-		}
-		Debug.Log (db);
-		gameState = BuildState (values);
+//		string parsedData = "";
+//		for (int i = 0; i < values.Count; i++) {
+//			parsedData += values [i] + "|";
+//		}
+//		Debug.Log (parsedData);
+		gameState = BuildState (values, NUM_OF_KEYS_AND_VALUES);
 		GameObject[] objs = GameObject.FindGameObjectsWithTag ("Player");
 		for (int i = 0; i < objs.Length; i++) {
 			if(!objs[i].name.Equals("PlayerCar")){
@@ -102,18 +104,11 @@ public class Network : MonoBehaviour {
 
 	//Store the game state from the parsed JSON
 	//The code below is horrible.  I'll try to explain.
-	//The keys come back in groups of 9 and look like this:
-	//  id_hash 
-	//	h
-	//	13
-	//	v1
-	//	0.05754724
-	//	v2
-	//	13.00023
-	//	hb
-	//	-3.028171E-09
-	//  We want to to store this so we can quickly access by id each tick.
-	Dictionary<string, string> BuildState(List<string> keys){
+	//The keys come back in groups of numOfValues and look like this:
+	//  id_hash | h | 13 | v1 | 0.0005 ... etc
+	//  We want to to store this in a dictionary so we can quickly access 
+	// the values by id on each tick.
+	Dictionary<string, string> BuildState(List<string> keys, int numOfValues){
 		
 		Dictionary<string, string> newState = new Dictionary<string, string> ();
 
@@ -121,7 +116,7 @@ public class Network : MonoBehaviour {
 
 		for (int i = 0; i < keys.Count; i++) {
 				
-			if (i %9 == 0) {
+			if (i % numOfValues == 0) {
 				id = keys[i];
 				newState.Add (id, "");
 			} else {
