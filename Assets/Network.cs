@@ -56,6 +56,11 @@ public class Network : MonoBehaviour {
 	void OnTick(SocketIOEvent e) {
 		
 		List<string> values = GetKeys(e.data.ToString());
+		string db = "";
+		for (int i = 0; i < values.Count; i++) {
+			db += values [i] + "|";
+		}
+		Debug.Log (db);
 		gameState = BuildState (values);
 		GameObject[] objs = GameObject.FindGameObjectsWithTag ("Player");
 		for (int i = 0; i < objs.Length; i++) {
@@ -97,20 +102,16 @@ public class Network : MonoBehaviour {
 
 	//Store the game state from the parsed JSON
 	//The code below is horrible.  I'll try to explain.
-	//The keys come back in groups of 13 and look like this:
-	//  id 
-	//	xPos
+	//The keys come back in groups of 9 and look like this:
+	//  id_hash 
+	//	h
 	//	13
-	//	yPos
+	//	v1
 	//	0.05754724
-	//	zPos
+	//	v2
 	//	13.00023
-	//	xVel
+	//	hb
 	//	-3.028171E-09
-	//	yVel
-	//	-2.379417E-07
-	//	zVel
-	//	-5.645251E-07
 	//  We want to to store this so we can quickly access by id each tick.
 	Dictionary<string, string> BuildState(List<string> keys){
 		
@@ -120,7 +121,7 @@ public class Network : MonoBehaviour {
 
 		for (int i = 0; i < keys.Count; i++) {
 				
-			if (i %13 == 0) {
+			if (i %9 == 0) {
 				id = keys[i];
 				newState.Add (id, "");
 			} else {

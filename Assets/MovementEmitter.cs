@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using SocketIO;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class MovementEmitter : MonoBehaviour {
 
@@ -13,7 +14,10 @@ public class MovementEmitter : MonoBehaviour {
 
 	void FixedUpdate () {
 		//Debug.Log (getMovementJSON());
-		socket.Emit("move", getMovementJSON());
+		float h = CrossPlatformInputManager.GetAxis("Horizontal");
+		float v = CrossPlatformInputManager.GetAxis("Vertical");
+		float handbrake = CrossPlatformInputManager.GetAxis("Jump");
+		socket.Emit("move", new JSONObject(moveVectorToObj(h, v, handbrake)));
 	}
 
 
@@ -29,10 +33,18 @@ public class MovementEmitter : MonoBehaviour {
 
 	}
 
-	JSONObject getMovementJSON() {
-		//return new JSONObject("{ \"position\":" + vectorToObj (transform.position) + "," +
-		//	"\"velocity\":" + vectorToObj (rb.velocity) + "}");
-		return new JSONObject("{" + vectorToObj (transform.position, "Pos") + "," +
-			vectorToObj (rb.velocity, "Vel") + "}");
+	string moveVectorToObj(float h, float v, float hb){
+
+		return "{\"h" + "\":\"" + h + "\"," +
+			"\"v1" + "\":\"" + v + "\"," +
+			"\"v2" + "\":\"" + v + "\"," +
+			"\"hb" + "\":\"" + hb + "\"}";
+
 	}
+
+	//JSONObject getMovementJSON() {
+		//return new JSONObject("{" + moveVectorToObj () + "}");
+		//return new JSONObject("{" + vectorToObj (transform.position, "Pos") + "," +
+			//vectorToObj (rb.velocity, "Vel") + "}");
+	//}
 }
