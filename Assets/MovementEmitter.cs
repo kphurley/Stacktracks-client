@@ -17,7 +17,9 @@ public class MovementEmitter : MonoBehaviour {
 		float h = CrossPlatformInputManager.GetAxis("Horizontal");
 		float v = CrossPlatformInputManager.GetAxis("Vertical");
 		float handbrake = CrossPlatformInputManager.GetAxis("Jump");
-		socket.Emit("move", new JSONObject(moveVectorToObj(h, v, handbrake)));
+		socket.Emit("move", new JSONObject("{" + moveVectorToObj(h, v, handbrake) + 
+			"," + vectorToObj (transform.position, "pos") +
+			"," + vectorToObj (rb.velocity, "vel") + "}"));
 	}
 
 
@@ -35,16 +37,15 @@ public class MovementEmitter : MonoBehaviour {
 
 	string moveVectorToObj(float h, float v, float hb){
 
-		return "{\"h" + "\":\"" + h + "\"," +
+		return "\"h" + "\":\"" + h + "\"," +
 			"\"v1" + "\":\"" + v + "\"," +
 			"\"v2" + "\":\"" + v + "\"," +
-			"\"hb" + "\":\"" + hb + "\"}";
+			"\"hb" + "\":\"" + hb + "\"";
 
 	}
 
-	//JSONObject getMovementJSON() {
-		//return new JSONObject("{" + moveVectorToObj () + "}");
-		//return new JSONObject("{" + vectorToObj (transform.position, "Pos") + "," +
-			//vectorToObj (rb.velocity, "Vel") + "}");
-	//}
+//	JSONObject getMovementJSON() {
+//		return new JSONObject(vectorToObj (transform.position) + "," +
+//			vectorToObj (rb.velocity));
+//	}
 }
