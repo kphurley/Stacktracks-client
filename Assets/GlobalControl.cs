@@ -20,11 +20,11 @@ public class GlobalControl : MonoBehaviour {
 		}
 	}
 
-	public static void SetIpAddress(string ip) {
+	public void SetIpAddress(string ip) {
 		ipAddress = ip;
 	}
 
-	public static string GetIpAddress(){
+	public string GetIpAddress(){
 		return "ws://" + ipAddress + ":3000/socket.io/?EIO=4&transport=websocket";
 	}
 

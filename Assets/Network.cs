@@ -12,7 +12,7 @@ public class Network : MonoBehaviour {
 	public GameObject networkCar;
 
 	private int NUM_OF_KEYS_AND_VALUES = 21;
-
+	private GlobalControl GC;
 	//The set of player game objects obtained via network
 	Dictionary<string, GameObject> players;
 
@@ -23,7 +23,8 @@ public class Network : MonoBehaviour {
 
 	void Start () {
 		socket = GetComponent<SocketIOComponent> ();
-		socket.url = GlobalControl.GetIpAddress ();
+		GC = GameObject.Find ("GlobalControl").GetComponent<GlobalControl>();
+		socket.url = GC.GetIpAddress ();
 
 		players = new Dictionary<string, GameObject> ();
 		gameState = new Dictionary<string, string> ();
