@@ -23,6 +23,7 @@ public class Network : MonoBehaviour {
 
 	void Start () {
 		socket = GetComponent<SocketIOComponent> ();
+		socket.url = GlobalControl.GetIpAddress ();
 
 		players = new Dictionary<string, GameObject> ();
 		gameState = new Dictionary<string, string> ();
