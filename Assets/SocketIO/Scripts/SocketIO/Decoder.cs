@@ -42,7 +42,7 @@ namespace SocketIO
 			try
 			{
 				#if SOCKET_IO_DEBUG
-				Debug.Log("[SocketIO] Decoding: " + e.Data);
+				//Debug.Log("[SocketIO] Decoding: " + e.Data);
 				#endif
 
 				string data = e.Data;
@@ -61,7 +61,7 @@ namespace SocketIO
 				// connect message properly parsed
 				if (data.Length <= 2) {
 					#if SOCKET_IO_DEBUG
-					Debug.Log("[SocketIO] Decoded: " + packet);
+					//Debug.Log("[SocketIO] Decoded: " + packet);
 					#endif
 					return packet;
 				}

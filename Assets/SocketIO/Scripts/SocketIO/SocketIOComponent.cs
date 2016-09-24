@@ -302,14 +302,14 @@ namespace SocketIO
 		private void EmitPacket(Packet packet)
 		{
 			#if SOCKET_IO_DEBUG
-			debugMethod.Invoke("[SocketIO] " + packet);
+			//debugMethod.Invoke("[SocketIO] " + packet);
 			#endif
 			
 			try {
 				ws.Send(encoder.Encode(packet));
 			} catch(SocketIOException ex) {
 				#if SOCKET_IO_DEBUG
-				debugMethod.Invoke(ex.ToString());
+				//debugMethod.Invoke(ex.ToString());
 				#endif
 			}
 		}
@@ -322,7 +322,7 @@ namespace SocketIO
 		private void OnMessage(object sender, MessageEventArgs e)
 		{
 			#if SOCKET_IO_DEBUG
-			debugMethod.Invoke("[SocketIO] Raw message: " + e.Data);
+			//debugMethod.Invoke("[SocketIO] Raw message: " + e.Data);
 			#endif
 			Packet packet = decoder.Decode(e);
 
@@ -338,7 +338,7 @@ namespace SocketIO
 		private void HandleOpen(Packet packet)
 		{
 			#if SOCKET_IO_DEBUG
-			debugMethod.Invoke("[SocketIO] Socket.IO sid: " + packet.json["sid"].str);
+			//debugMethod.Invoke("[SocketIO] Socket.IO sid: " + packet.json["sid"].str);
 			#endif
 			sid = packet.json["sid"].str;
 			EmitEvent("open");
@@ -367,7 +367,7 @@ namespace SocketIO
 				}
 
 				#if SOCKET_IO_DEBUG
-				debugMethod.Invoke("[SocketIO] Ack received for invalid Action: " + packet.id);
+				//debugMethod.Invoke("[SocketIO] Ack received for invalid Action: " + packet.id);
 				#endif
 			}
 
@@ -400,7 +400,7 @@ namespace SocketIO
 					handler(ev);
 				} catch(Exception ex){
 					#if SOCKET_IO_DEBUG
-					debugMethod.Invoke(ex.ToString());
+					//debugMethod.Invoke(ex.ToString());
 					#endif
 				}
 			}
