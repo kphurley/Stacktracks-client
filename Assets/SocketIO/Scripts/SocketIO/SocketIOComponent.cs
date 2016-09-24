@@ -27,7 +27,7 @@
 
 #endregion
 
-#define SOCKET_IO_DEBUG			// Uncomment this for debug
+//#define SOCKET_IO_DEBUG			// Uncomment this for debug
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -83,9 +83,9 @@ namespace SocketIO
 
 		#endregion
 
-		#if SOCKET_IO_DEBUG
-		public Action<string> debugMethod;
-		#endif
+		//#if SOCKET_IO_DEBUG
+		//public Action<string> debugMethod;
+		//#endif
 
 		#region Unity interface
 
@@ -114,9 +114,9 @@ namespace SocketIO
 
 			connected = false;
 
-			#if SOCKET_IO_DEBUG
-			if(debugMethod == null) { debugMethod = Debug.Log; };
-			#endif
+			//#if SOCKET_IO_DEBUG
+			//if(debugMethod == null) { debugMethod = Debug.Log; };
+			//#endif
 		}
 
 		public void Start()
@@ -196,17 +196,17 @@ namespace SocketIO
 		public void Off(string ev, Action<SocketIOEvent> callback)
 		{
 			if (!handlers.ContainsKey(ev)) {
-				#if SOCKET_IO_DEBUG
-				debugMethod.Invoke("[SocketIO] No callbacks registered for event: " + ev);
-				#endif
+				//#if SOCKET_IO_DEBUG
+				//debugMethod.Invoke("[SocketIO] No callbacks registered for event: " + ev);
+				//#endif
 				return;
 			}
 
 			List<Action<SocketIOEvent>> l = handlers [ev];
 			if (!l.Contains(callback)) {
-				#if SOCKET_IO_DEBUG
-				debugMethod.Invoke("[SocketIO] Couldn't remove callback action for event: " + ev);
-				#endif
+				//#if SOCKET_IO_DEBUG
+				//debugMethod.Invoke("[SocketIO] Couldn't remove callback action for event: " + ev);
+				//#endif
 				return;
 			}
 
@@ -301,16 +301,16 @@ namespace SocketIO
 
 		private void EmitPacket(Packet packet)
 		{
-			#if SOCKET_IO_DEBUG
-			debugMethod.Invoke("[SocketIO] " + packet);
-			#endif
+			//#if SOCKET_IO_DEBUG
+			//debugMethod.Invoke("[SocketIO] " + packet);
+			//#endif
 			
 			try {
 				ws.Send(encoder.Encode(packet));
 			} catch(SocketIOException ex) {
-				#if SOCKET_IO_DEBUG
-				debugMethod.Invoke(ex.ToString());
-				#endif
+				//#if SOCKET_IO_DEBUG
+				//debugMethod.Invoke(ex.ToString());
+				//#endif
 			}
 		}
 
@@ -321,9 +321,9 @@ namespace SocketIO
 
 		private void OnMessage(object sender, MessageEventArgs e)
 		{
-			#if SOCKET_IO_DEBUG
-			debugMethod.Invoke("[SocketIO] Raw message: " + e.Data);
-			#endif
+			//#if SOCKET_IO_DEBUG
+			//debugMethod.Invoke("[SocketIO] Raw message: " + e.Data);
+			//#endif
 			Packet packet = decoder.Decode(e);
 
 			switch (packet.enginePacketType) {
@@ -337,9 +337,9 @@ namespace SocketIO
 
 		private void HandleOpen(Packet packet)
 		{
-			#if SOCKET_IO_DEBUG
-			debugMethod.Invoke("[SocketIO] Socket.IO sid: " + packet.json["sid"].str);
-			#endif
+			//#if SOCKET_IO_DEBUG
+			//debugMethod.Invoke("[SocketIO] Socket.IO sid: " + packet.json["sid"].str);
+			//#endif
 			sid = packet.json["sid"].str;
 			EmitEvent("open");
 		}
@@ -366,9 +366,9 @@ namespace SocketIO
 					return;
 				}
 
-				#if SOCKET_IO_DEBUG
-				debugMethod.Invoke("[SocketIO] Ack received for invalid Action: " + packet.id);
-				#endif
+				//#if SOCKET_IO_DEBUG
+				//debugMethod.Invoke("[SocketIO] Ack received for invalid Action: " + packet.id);
+				//#endif
 			}
 
 			if (packet.socketPacketType == SocketPacketType.EVENT) {
@@ -399,9 +399,9 @@ namespace SocketIO
 				try{
 					handler(ev);
 				} catch(Exception ex){
-					#if SOCKET_IO_DEBUG
-					debugMethod.Invoke(ex.ToString());
-					#endif
+					//#if SOCKET_IO_DEBUG
+					//debugMethod.Invoke(ex.ToString());
+					//#endif
 				}
 			}
 		}

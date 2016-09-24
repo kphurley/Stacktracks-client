@@ -26,7 +26,7 @@
  */
 #endregion
 
-#define SOCKET_IO_DEBUG			// Uncomment this for debug
+//#define SOCKET_IO_DEBUG			// Uncomment this for debug
 using System;
 using System.Collections;
 using System.Text;
@@ -40,9 +40,9 @@ namespace SocketIO
 		{
 			try
 			{
-				#if SOCKET_IO_DEBUG
-				Debug.Log("[SocketIO] Encoding: " + packet.json);
-				#endif
+				//#if SOCKET_IO_DEBUG
+				//Debug.Log("[SocketIO] Encoding: " + packet.json);
+				//#endif
 
 				StringBuilder builder = new StringBuilder();
 
@@ -76,9 +76,9 @@ namespace SocketIO
 					builder.Append(packet.json.ToString());
 				}
 
-				#if SOCKET_IO_DEBUG
-				Debug.Log("[SocketIO] Encoded: " + builder);
-				#endif
+				//#if SOCKET_IO_DEBUG
+				//Debug.Log("[SocketIO] Encoded: " + builder);
+				//#endif
 
 				return builder.ToString();
 			
