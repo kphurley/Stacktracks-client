@@ -16,10 +16,7 @@ public class RaceManager : MonoBehaviour {
 	public Text timer;
 
 	void StartRace(){
-		playerCar.transform.position = startPosition.transform.position;
-		playerCar.transform.rotation = playerInitialRotation;
-		playerCar.GetComponent<Rigidbody>().velocity = Vector3.zero;
-
+		TurnCarOff ();  //Will turn back on after coundown is up!
 		timerOn = false;
 		raceIsOver = false;
 		spawnTime = DateTime.Now;
@@ -41,28 +38,56 @@ public class RaceManager : MonoBehaviour {
 
 		if (raceIsOver) {
 			timerOn = false;
-		}
-		else if (DateTime.Now >= startTime) {
+		} else if (DateTime.Now >= startTime) {
+			//The race started!  Game on!
 			timerOn = true;
+			TurnCarOn ();
 
+		} else {
+			//Sometimes the car keeps rolling after a restart.  
+			//This keeps it in place until the countdown ends.
+			playerCar.transform.position = startPosition.transform.position;
+			playerCar.transform.rotation = playerInitialRotation;
+			playerCar.GetComponent<Rigidbody>().velocity = Vector3.zero;
 		}
 
 		if (timerOn) {
 			elapsedTime = DateTime.Now - startTime;
 
-			string displayTime = String.Format("{0:00}:{1:00}:{2:00}", 
-				elapsedTime.Minutes, 
-				elapsedTime.Seconds, 
-				elapsedTime.Milliseconds);
+			string displayTime = String.Format ("{0:00}:{1:00}:{2:00}", 
+				                     elapsedTime.Minutes, 
+				                     elapsedTime.Seconds, 
+				                     elapsedTime.Milliseconds);
 
 			timer.text = displayTime;	
-		}
+		} 
 
 	}
 
 	public void EndRace(){
 		raceIsOver = true;
 		//send time to server
+	}
+
+	//Prevents user action and car "stuff" while countdown is happening.
+	//Disabling components is definitely not ideal..but..its a hackathon..so..yanno.
+	void TurnCarOff(){
+		playerCar.transform.position = startPosition.transform.position;
+		playerCar.transform.rotation = playerInitialRotation;
+		playerCar.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		playerCar.GetComponent<CarUserControl>().enabled = false;
+		playerCar.GetComponent<CarAudio>().enabled = false;
+		if (playerCar.GetComponent<AudioSource> ()) {
+			playerCar.GetComponent<AudioSource> ().enabled = false;
+		}
+	}
+
+	void TurnCarOn(){
+		playerCar.GetComponent<CarUserControl>().enabled = true;
+		playerCar.GetComponent<CarAudio>().enabled = true;
+		if (playerCar.GetComponent<AudioSource> ()) {
+			playerCar.GetComponent<AudioSource> ().enabled = true;
+		}
 	}
 		
 }
