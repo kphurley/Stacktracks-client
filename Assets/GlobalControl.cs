@@ -6,6 +6,7 @@ public class GlobalControl : MonoBehaviour {
 
 	public static GlobalControl Instance;
 	public static string ipAddress;
+	public static string username;
 
 	void Awake ()   
 	{
@@ -20,12 +21,22 @@ public class GlobalControl : MonoBehaviour {
 		}
 	}
 
+	//The ip methods don't work.  It seems the only reliable way 
+	//to set the SocketIOComponent's ip address is in the inspector.
 	public void SetIpAddress(string ip) {
 		ipAddress = ip;
 	}
 
 	public string GetIpAddress(){
 		return "ws://" + ipAddress + ":3000/socket.io/?EIO=4&transport=websocket";
+	}
+
+	public void SetUsername(string name) {
+		username = name;
+	}
+
+	public string GetUsername(){
+		return username;
 	}
 
 	public void GoToPlayScene(){
