@@ -14,6 +14,8 @@ public class Network : MonoBehaviour {
 
 	private int NUM_OF_GAMESTATE_VALUES = 21;
 	private GlobalControl GC;
+	private string username;
+
 	//The set of player game objects obtained via network
 	Dictionary<string, GameObject> players;
 
@@ -23,9 +25,14 @@ public class Network : MonoBehaviour {
 
 
 	void Start () {
+		
 		socket = GetComponent<SocketIOComponent> ();
+
+		//Get stuff from the global control: 
+		// - the ip they put in, as well as the username
 		GC = GameObject.Find ("GlobalControl").GetComponent<GlobalControl>();
-		socket.url = GC.GetIpAddress ();
+		//socket.url = GC.GetIpAddress ();
+		username = GC.GetUsername ();
 
 		players = new Dictionary<string, GameObject> ();
 		gameState = new Dictionary<string, string> ();
@@ -40,21 +47,27 @@ public class Network : MonoBehaviour {
 
 	void OnConnected(SocketIOEvent e){
 		Debug.Log ("Connected to server");
+		string usernameObj = "{\"username\":\"" + username + "\"}";
+		//Debug.Log (usernameObj);
+		socket.Emit ("setUsername", new JSONObject (usernameObj));
 	}
 
+	//Handles spawning of other players
 	void OnSpawn(SocketIOEvent e) {
 		
-		Debug.Log ("Spawning player: " + e.data.ToString());
 		var newPlayer = Instantiate (networkCar);
+
+		//This is the game object name, not the username
 		newPlayer.name = e.data ["id"].ToString ();
+
+		//Hack to assign the instance of NetworkCar this Network object
 		newPlayer.SendMessage ("AssignNetwork", this);
+
 		players.Add (e.data ["id"].ToString (), newPlayer);
-		Debug.Log ("Player count: " + players.Count);
 	}
 
 	void OnDisconnected(SocketIOEvent e) {
 		var id = e.data ["id"].ToString ();
-		Debug.Log ("Player disconnected: " + id);
 		Destroy (players [id]);
 		players.Remove (id);
 	}

@@ -101,9 +101,9 @@ public class RaceManager : MonoBehaviour {
 		Array.Sort (times, new ArrangeByTime ());
 		string newLeaderboard = "";
 		for (int i = 0; i < times.Length; i++) {
-			Debug.Log ("TimeEntryObject: " + times [i].id +
+			Debug.Log ("TimeEntryObject: (" + times [i].id + ") " + times [i].username +
 			": " + times [i].time);
-			newLeaderboard += ((i+1) + ". " + times[i].id + 
+			newLeaderboard += ((i+1) + ". " + times[i].username + 
 							": " + times[i].time + "\n");
 		}
 		leaderboard.text = newLeaderboard;
