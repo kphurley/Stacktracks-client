@@ -14,6 +14,9 @@ public class RaceManager : MonoBehaviour {
 	public GameObject startPosition;
 	public Quaternion playerInitialRotation;
 	public Text timer;
+	public Text leaderboard;
+	public Text speedDisplay;
+	public Network network;
 
 	void StartRace(){
 		TurnCarOff ();  //Will turn back on after coundown is up!
@@ -21,6 +24,7 @@ public class RaceManager : MonoBehaviour {
 		raceIsOver = false;
 		spawnTime = DateTime.Now;
 		startTime = spawnTime + new TimeSpan(0, 0, 3);
+		timer.text = "00:00:000";
 	}
 
 	void Start () {
@@ -35,6 +39,13 @@ public class RaceManager : MonoBehaviour {
 	}
 
 	void LateUpdate () {
+
+		HandleTimerControls ();
+		UpdateSpeedDisplay ();
+
+	}
+
+	void HandleTimerControls(){
 
 		if (raceIsOver) {
 			timerOn = false;
@@ -55,18 +66,47 @@ public class RaceManager : MonoBehaviour {
 			elapsedTime = DateTime.Now - startTime;
 
 			string displayTime = String.Format ("{0:00}:{1:00}:{2:00}", 
-				                     elapsedTime.Minutes, 
-				                     elapsedTime.Seconds, 
-				                     elapsedTime.Milliseconds);
+				elapsedTime.Minutes, 
+				elapsedTime.Seconds, 
+				elapsedTime.Milliseconds);
 
 			timer.text = displayTime;	
 		} 
+		
+	}
 
+	void UpdateSpeedDisplay(){
+		speedDisplay.text = 
+			((int)playerCar.GetComponent<CarController> ().CurrentSpeed).ToString() + " MPH";
 	}
 
 	public void EndRace(){
 		raceIsOver = true;
+		network.RecordCompletionTime (timer.text);
 		//send time to server
+	}
+
+	//The comparer used for sorting TimeEntries
+	//See https://msdn.microsoft.com/en-us/library/system.collections.icomparer(v=vs.110).aspx
+	public class ArrangeByTime : IComparer  {
+
+		public int Compare( System.Object x, System.Object y )  {
+			return(String.Compare(((JsonHelper.TimeEntryArray.TimeEntry)x).time, 
+				((JsonHelper.TimeEntryArray.TimeEntry)y).time ));
+		}
+
+	}
+
+	public void SetLeaderboard(JsonHelper.TimeEntryArray.TimeEntry[] times){
+		Array.Sort (times, new ArrangeByTime ());
+		string newLeaderboard = "";
+		for (int i = 0; i < times.Length; i++) {
+			Debug.Log ("TimeEntryObject: " + times [i].id +
+			": " + times [i].time);
+			newLeaderboard += ((i+1) + ". " + times[i].id + 
+							": " + times[i].time + "\n");
+		}
+		leaderboard.text = newLeaderboard;
 	}
 
 	//Prevents user action and car "stuff" while countdown is happening.

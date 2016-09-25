@@ -19,12 +19,13 @@ public class NetworkMove : MonoBehaviour {
 		cc = GetComponent<CarController> ();
 	}
 
+	//Hack to get a reference to the SocketIO Component at runtime
 	void AssignNetwork(Network n){
 		socket = n.GetComponent<SocketIOComponent> ();
 	}
 
 	void ApplyNetworkMove(string posValues){
-		//Debug.Log (posValues);
+		
 		string[] values = posValues.Split (',');
 		cc.Move (float.Parse(values [1]), float.Parse(values [3]), 
 			float.Parse(values [5]), float.Parse(values [7]));
