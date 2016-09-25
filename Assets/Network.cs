@@ -10,8 +10,9 @@ public class Network : MonoBehaviour {
 	static SocketIOComponent socket;
 
 	public GameObject networkCar;
+	public RaceManager rm;
 
-	private int NUM_OF_KEYS_AND_VALUES = 21;
+	private int NUM_OF_GAMESTATE_VALUES = 21;
 	private GlobalControl GC;
 	//The set of player game objects obtained via network
 	Dictionary<string, GameObject> players;
@@ -34,6 +35,7 @@ public class Network : MonoBehaviour {
 		socket.On("spawn", OnSpawn);
 		socket.On ("disconnected", OnDisconnected); 
 		socket.On ("tick", OnTick);
+		socket.On ("leaderboard", OnLeaderboard);
 	}
 
 	void OnConnected(SocketIOEvent e){
@@ -58,14 +60,10 @@ public class Network : MonoBehaviour {
 	}
 		
 	void OnTick(SocketIOEvent e) {
-		
+		//This invokes my custom JSON parsing solution
 		List<string> values = GetKeys(e.data.ToString());
-//		string parsedData = "";
-//		for (int i = 0; i < values.Count; i++) {
-//			parsedData += values [i] + "|";
-//		}
-//		Debug.Log (parsedData);
-		gameState = BuildState (values, NUM_OF_KEYS_AND_VALUES);
+		gameState = BuildState (values, NUM_OF_GAMESTATE_VALUES);
+
 		GameObject[] objs = GameObject.FindGameObjectsWithTag ("Player");
 		for (int i = 0; i < objs.Length; i++) {
 			if(!objs[i].name.Equals("PlayerCar")){
@@ -76,10 +74,18 @@ public class Network : MonoBehaviour {
 		}
 	}
 
+	void OnLeaderboard(SocketIOEvent e){
+		//This invokes our JsonHelper and serializes the json obtained
+		//as an array of TimeObjects
+		JsonHelper.TimeEntryArray t = 
+			JsonUtility.FromJson<JsonHelper.TimeEntryArray> (e.data.ToString ());
+		rm.SetLeaderboard (t.times);
+	}
+
 	//should eventually end up in a utils class
 	//This gives me a list of keys so I can parse the JSON to record ticks properly
 	List<string> GetKeys(string text){	
-		//string text = "One car red car blue car";
+		// Regex to find everything in quotes
 		string pat = "\"(.*?)\"";
 
 		// Instantiate the regular expression object.
@@ -87,7 +93,7 @@ public class Network : MonoBehaviour {
 
 		// Match the regular expression pattern against a text string.
 		Match m = r.Match(text);
-		//int matchCount = 0;
+
 		List<string> keys = new List<string>();
 
 
@@ -128,6 +134,13 @@ public class Network : MonoBehaviour {
 		}
 
 		return newState;
+	}
+
+	//Called when the race manager records a player's completion time.
+	//Sends the time to the server.
+	public void RecordCompletionTime(string time){
+		socket.Emit ("completionTime", 
+			new JSONObject("{\"time\":\"" + time + "\"}"));
 	}
 
 }
