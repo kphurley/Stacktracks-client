@@ -19,7 +19,8 @@ public class MovementEmitter : MonoBehaviour {
 		float handbrake = CrossPlatformInputManager.GetAxis("Jump");
 		socket.Emit("move", new JSONObject("{" + moveVectorToObj(h, v, handbrake) + 
 			"," + vectorToObj (transform.position, "pos") +
-			"," + vectorToObj (rb.velocity, "vel") + "}"));
+			"," + vectorToObj (rb.velocity, "vel") + 
+			"," + quaternionToObj(transform.rotation) + "}"));
 	}
 
 
@@ -41,6 +42,15 @@ public class MovementEmitter : MonoBehaviour {
 			"\"v1" + "\":\"" + v + "\"," +
 			"\"v2" + "\":\"" + v + "\"," +
 			"\"hb" + "\":\"" + hb + "\"";
+
+	}
+
+	string quaternionToObj(Quaternion q){
+
+		return "\"x" + "\":\"" + q.x + "\"," +
+			"\"y" + "\":\"" + q.y + "\"," +
+			"\"z" + "\":\"" + q.z + "\"," +
+			"\"w" + "\":\"" + q.w + "\"";
 
 	}
 

@@ -35,6 +35,8 @@ public class NetworkMove : MonoBehaviour {
 			float.Parse (values [11]), float.Parse (values [13]));
 		rb.velocity = new Vector3 (float.Parse (values [15]),
 			float.Parse (values [17]), float.Parse (values [19]));
+		transform.rotation = new Quaternion (float.Parse (values [21]),
+			float.Parse (values [23]), float.Parse (values [25]), float.Parse (values [27]));
 	}
 		
 

@@ -12,7 +12,7 @@ public class Network : MonoBehaviour {
 	public GameObject networkCar;
 	public RaceManager rm;
 
-	private int NUM_OF_GAMESTATE_VALUES = 21;
+	private int NUM_OF_GAMESTATE_VALUES = 29;
 	private GlobalControl GC;
 	private string username;
 
