@@ -60,6 +60,10 @@ public class Network : MonoBehaviour {
 		//This is the game object name, not the username
 		newPlayer.name = e.data ["id"].ToString ();
 
+		//BroadcastMessage calls the method indicated in the first argument
+		//on this object and all of its children.  Nifty!
+		newPlayer.BroadcastMessage ("SetNameText", e.data ["username"].ToString ());
+
 		//Hack to assign the instance of NetworkCar this Network object
 		newPlayer.SendMessage ("AssignNetwork", this);
 

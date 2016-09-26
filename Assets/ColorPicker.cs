@@ -13,10 +13,14 @@ public class ColorPicker : MonoBehaviour {
 	}
 
 	public void ApplyChosenMaterial(int idx){
-		colorIdx = idx;
-		Destroy(GameObject.Find (activePrefab.name+"(Clone)"));
-		activePrefab = bodyColorPrefab [idx];
-		ApplyActivePrefab ();
+
+		if (colorIdx != idx) {
+			colorIdx = idx;
+			Destroy (GameObject.Find (activePrefab.name + "(Clone)"));
+			activePrefab = bodyColorPrefab [idx];
+			ApplyActivePrefab ();
+		}
+
 	}
 
 	void ApplyActivePrefab(){
