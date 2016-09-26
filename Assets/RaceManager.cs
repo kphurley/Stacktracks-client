@@ -17,8 +17,9 @@ public class RaceManager : MonoBehaviour {
 	public Text leaderboard;
 	public Text speedDisplay;
 	public Network network;
-
 	public PauseMenuManager pauser;
+
+	public AudioSource startBeeps;
 
 	void StartRace(){
 		TurnCarOff ();  //Will turn back on after coundown is up!
@@ -26,11 +27,13 @@ public class RaceManager : MonoBehaviour {
 		timerOn = false;
 		raceIsOver = false;
 		spawnTime = DateTime.Now;
-		startTime = spawnTime + new TimeSpan(0, 0, 3);
+		startTime = spawnTime + new TimeSpan(0, 0, 4);
 		timer.text = "00:00:000";
+		startBeeps.Play ();
 	}
 
 	void Start () {
+		startBeeps = GetComponent<AudioSource> ();
 		playerInitialRotation = playerCar.transform.rotation;
 		StartRace ();
 	}
