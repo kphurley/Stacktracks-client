@@ -9,6 +9,7 @@ public class NetworkMove : MonoBehaviour {
 	public SocketIOComponent socket;
 	public string id;
 	public CarController cc;
+	public ColorPicker cp;
 
 	private Rigidbody rb;
 
@@ -37,6 +38,10 @@ public class NetworkMove : MonoBehaviour {
 			float.Parse (values [17]), float.Parse (values [19]));
 		transform.rotation = new Quaternion (float.Parse (values [21]),
 			float.Parse (values [23]), float.Parse (values [25]), float.Parse (values [27]));
+		if (int.Parse (values [29]) != cp.GetColorIdx ()) {
+			cp.ApplyChosenMaterial(int.Parse(values[29]));
+		}
+
 	}
 		
 

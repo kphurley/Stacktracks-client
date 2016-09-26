@@ -18,8 +18,11 @@ public class RaceManager : MonoBehaviour {
 	public Text speedDisplay;
 	public Network network;
 
+	public PauseMenuManager pauser;
+
 	void StartRace(){
 		TurnCarOff ();  //Will turn back on after coundown is up!
+		//pauser.Toggle();
 		timerOn = false;
 		raceIsOver = false;
 		spawnTime = DateTime.Now;
@@ -36,6 +39,11 @@ public class RaceManager : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.Return)){
 			StartRace ();
 		}
+
+		if(Input.GetKeyDown(KeyCode.Tab)){
+			pauser.Toggle ();
+		}
+			
 	}
 
 	void LateUpdate () {

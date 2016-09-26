@@ -7,6 +7,7 @@ public class MovementEmitter : MonoBehaviour {
 
 	private Rigidbody rb;
 	public SocketIOComponent socket;
+	public ColorPicker cp;
 
 	void Start () {
 		rb = GetComponent<Rigidbody> ();
@@ -20,7 +21,8 @@ public class MovementEmitter : MonoBehaviour {
 		socket.Emit("move", new JSONObject("{" + moveVectorToObj(h, v, handbrake) + 
 			"," + vectorToObj (transform.position, "pos") +
 			"," + vectorToObj (rb.velocity, "vel") + 
-			"," + quaternionToObj(transform.rotation) + "}"));
+			"," + quaternionToObj(transform.rotation) + 
+			"," + "\"color\":" + "\"" + cp.GetColorIdx() + "\"}"));
 	}
 
 
@@ -53,6 +55,7 @@ public class MovementEmitter : MonoBehaviour {
 			"\"w" + "\":\"" + q.w + "\"";
 
 	}
+		
 
 //	JSONObject getMovementJSON() {
 //		return new JSONObject(vectorToObj (transform.position) + "," +
