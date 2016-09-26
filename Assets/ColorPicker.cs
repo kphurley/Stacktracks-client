@@ -16,7 +16,13 @@ public class ColorPicker : MonoBehaviour {
 
 		if (colorIdx != idx) {
 			colorIdx = idx;
-			Destroy (GameObject.Find (activePrefab.name + "(Clone)"));
+			foreach (Transform t in transform) {
+				if (t.name == activePrefab.name + "(Clone)") {
+					Destroy (t.gameObject);	
+				}
+
+			}
+
 			activePrefab = bodyColorPrefab [idx];
 			ApplyActivePrefab ();
 		}
